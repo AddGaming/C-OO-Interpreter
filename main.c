@@ -1,6 +1,4 @@
-#include <stdio.h>
 
-int main(void){
-    printf("Hello ^^/\n");
+int main(int argc, char *argv[]) {
     return 0;
 }
