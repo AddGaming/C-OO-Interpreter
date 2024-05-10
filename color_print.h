@@ -2,6 +2,11 @@
  * print in color
  */
 
+#ifndef print_redln
+// ##############################
+// STD OUT
+// ##############################
+
 #define print_redln(...) \
     printf ("\x1B[31m"); \
     printf (__VA_ARGS__); \
@@ -82,4 +87,88 @@
     printf (__VA_ARGS__);  \
     printf ("\x1Be[0m");
 
+// ##############################
+// ERROR
+// ##############################
 
+#define err_redln(...) \
+    fprintf (stderr, "\x1B[31m"); \
+    fprintf (stderr, __VA_ARGS__); \
+    fprintf (stderr, "\x1B[0m\n");
+
+#define err_greenln(...) \
+    fprintf (stderr, "\x1B[32m"); \
+    fprintf (stderr, __VA_ARGS__); \
+    fprintf (stderr, "\x1B[0m\n");
+
+#define err_blackln(...) \
+    fprintf (stderr, "\x1B[30m"); \
+    fprintf (stderr, __VA_ARGS__); \
+    fprintf (stderr, "\x1B[0m\n");
+
+#define err_yellowln(...) \
+    fprintf (stderr, "\x1B[33m"); \
+    fprintf (stderr, __VA_ARGS__); \
+    fprintf (stderr, "\x1B[0m\n");
+
+#define err_blueln(...) \
+    fprintf (stderr, "\x1B[34m"); \
+    fprintf (stderr, __VA_ARGS__); \
+    fprintf (stderr, "\x1B[0m\n");
+
+#define err_magentyln(...) \
+    fprintf (stderr, "\x1B[35m"); \
+    fprintf (stderr, __VA_ARGS__); \
+    fprintf (stderr, "\x1B[0m\n");
+
+#define err_cyanln(...) \
+    fprintf (stderr, "\x1B[36m"); \
+    fprintf (stderr, __VA_ARGS__); \
+    fprintf (stderr, "\x1Be[0m\n");
+
+#define err_whiteln(...) \
+    fprintf (stderr, "\x1B[0;37m"); \
+    fprintf (stderr, __VA_ARGS__); \
+    fprintf (stderr, "\x1Be[0m\n");
+
+#define err_red(...) \
+    fprintf (stderr, "\x1B[0;31m"); \
+    fprintf (stderr, __VA_ARGS__); \
+    fprintf (stderr, "\x1Be[0m");
+
+#define err_green(...) \
+    fprintf (stderr, "\x1B[0;32m"); \
+    fprintf (stderr, __VA_ARGS__);  \
+    fprintf (stderr, "\x1Be[0m");
+
+#define err_black(...) \
+    fprintf (stderr, "\x1B[0;30m"); \
+    fprintf (stderr, __VA_ARGS__);  \
+    fprintf (stderr, "\x1Be[0m");
+
+#define err_yellow(...) \
+    fprintf (stderr, "\x1B[0;33m"); \
+    fprintf (stderr, __VA_ARGS__);  \
+    fprintf (stderr, "\x1Be[0m");
+
+#define err_blue(...) \
+    fprintf (stderr, "\x1B[0;34m"); \
+    fprintf (stderr, __VA_ARGS__);  \
+    fprintf (stderr, "\x1Be[0m");
+
+#define err_magenty(...) \
+    fprintf (stderr, "\x1B[0;35m"); \
+    fprintf (stderr, __VA_ARGS__);  \
+    fprintf (stderr, "\x1Be[0m");
+
+#define err_cyan(...) \
+    fprintf (stderr, "\x1B[0;36m"); \
+    fprintf (stderr, __VA_ARGS__);  \
+    fprintf (stderr, "\x1Be[0m");
+
+#define err_white(...) \
+    fprintf (stderr, "\x1B[0;37m"); \
+    fprintf (stderr, __VA_ARGS__);  \
+    fprintf (stderr, "\x1Be[0m");
+
+#endif
