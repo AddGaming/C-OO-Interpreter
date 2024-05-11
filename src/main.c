@@ -8,7 +8,7 @@ typedef enum {
     DIV, // division /
     CONST_INT, // constant integer
     CONST_FLT, // constant float
-    CONST_CHAR, // constant character
+    CONST_CHR, // constant character
     CONST_STR, // constant string
     LBRACK, // left bracket {
     RBRACK, // right bracket }
@@ -32,25 +32,37 @@ DEFINE_WP(LexToken);
 DEFINE_INSERT(LexToken);
 
 void skip_whitespace(FILE* fp) {
+    fpos_t pos;
+    fgetpos(fp, &pos);
+
     int c = fgetc(fp);
     int space = (int) ' ';
     int tab = (int) '\t';
-    while (c != EOF && (c == space || c == tab)) {
+    int carrige = (int) '\r';
+    while (c != EOF && (c == carrige || c == space || c == tab)) {
+        fgetpos(fp, &pos);
         c = fgetc(fp);
     }
+    if (c != EOF) fsetpos(fp, &pos);
 }
 void until_whitespace(FILE* fp) {
+    fpos_t pos;
+    fgetpos(fp, &pos);
+
     int c = fgetc(fp);
     int space = (int) ' ';
     int tab = (int) '\t';
-    while (c != EOF && c != space && c != tab) {
+    int carrige = (int) '\r';
+    while (c != EOF && c != carrige && c != space && c != tab) {
+        fgetpos(fp, &pos);
         c = fgetc(fp);
     }
+    fsetpos(fp, &pos);
 }
 
 LexTokenWp lex_file(FILE* fp) {
     new_wp(ans, LexToken, 8);
-    char token_buff[2] = {'\0'};
+    char token_buff[3] = {'\0'};
 
     while (1) {
         skip_whitespace(fp);
@@ -60,13 +72,62 @@ LexTokenWp lex_file(FILE* fp) {
         else {
             fpos_t pos;
             fgetpos(fp, &pos);
-            fgets(token_buff, sizeof(token_buff), fp);
+            fgets(token_buff, 3, fp);
             fsetpos(fp, &pos);
-            fgetc(fp); // skipping one ahead to guarantee progress
 
-            if (token_buff[0] == '*') {
+            if (token_buff[0] == '+') {
+                LexToken tk = {ADD, {0}}; 
+                ans = insert_LexToken(ans, tk).result;
+                fgetc(fp); // skipping one ahead to guarantee progress
+            }
+            else if (token_buff[0] == '-') {
+                LexToken tk = {SUB, {0}}; 
+                ans = insert_LexToken(ans, tk).result;
+                fgetc(fp); // skipping one ahead to guarantee progress
+            }
+            else if (token_buff[0] == '*') {
                 LexToken tk = {MUL, {0}}; 
                 ans = insert_LexToken(ans, tk).result;
+                fgetc(fp); // skipping one ahead to guarantee progress
+            }
+            else if (token_buff[0] == '/') {
+                LexToken tk = {DIV, {0}}; 
+                ans = insert_LexToken(ans, tk).result;
+                fgetc(fp); // skipping one ahead to guarantee progress
+            }
+            else if (token_buff[0] == '{') {
+                LexToken tk = {LBRACK, {0}}; 
+                ans = insert_LexToken(ans, tk).result;
+                fgetc(fp); // skipping one ahead to guarantee progress
+            }
+            else if (token_buff[0] == '}') {
+                LexToken tk = {RBRACK, {0}}; 
+                ans = insert_LexToken(ans, tk).result;
+                fgetc(fp); // skipping one ahead to guarantee progress
+            }
+            else if (token_buff[0] == '(') {
+                LexToken tk = {LPAR, {0}}; 
+                ans = insert_LexToken(ans, tk).result;
+                fgetc(fp); // skipping one ahead to guarantee progress
+            }
+            else if (token_buff[0] == ')') {
+                LexToken tk = {RPAR, {0}}; 
+                ans = insert_LexToken(ans, tk).result;
+                fgetc(fp); // skipping one ahead to guarantee progress
+            }
+            else if (token_buff[0] == '[') {
+                LexToken tk = {LBRACE, {0}}; 
+                ans = insert_LexToken(ans, tk).result;
+                fgetc(fp); // skipping one ahead to guarantee progress
+            }
+            else if (token_buff[0] == ']') {
+                LexToken tk = {RBRACE, {0}}; 
+                ans = insert_LexToken(ans, tk).result;
+                fgetc(fp); // skipping one ahead to guarantee progress
+            }
+            else {
+                print_yellowln("unknown token: \"%s\"", token_buff);
+                fgetc(fp); // skipping one ahead to guarantee progress
             }
         }
     }
@@ -76,6 +137,7 @@ LexTokenWp lex_file(FILE* fp) {
 }
 
 void print_lex_wp(LexTokenWp wp) {
+    print_yellowln("cap: %ld | size: %d | count: %ld ", wp.capacity, wp.size, wp.count);
     for (size_t i = 0; i < wp.count; i++) {
         switch (wp.ptr[i].type) {
             case ADD: {
@@ -92,6 +154,46 @@ void print_lex_wp(LexTokenWp wp) {
             }
             case DIV: {
                 print_yellow("DIV");
+                break;
+            }
+            case CONST_INT: {
+                print_yellow("CONT_INT");
+                break;
+            }
+            case CONST_FLT: {
+                print_yellow("CONST_FLT");
+                break;
+            }
+            case CONST_CHR: {
+                print_yellow("COSNT_CHR");
+                break;
+            }
+            case CONST_STR: {
+                print_yellow("COSNT_STR");
+                break;
+            }
+            case LBRACK: {
+                print_yellow("LBRACK");
+                break;
+            }
+            case RBRACK: {
+                print_yellow("RBRACK");
+                break;
+            }
+            case LPAR: {
+                print_yellow("LPAR");
+                break;
+            }
+            case RPAR: {
+                print_yellow("RPAR");
+                break;
+            }
+            case LBRACE: {
+                print_yellow("LBRACE");
+                break;
+            }
+            case RBRACE: {
+                print_yellow("RBRACE");
                 break;
             }
         }
