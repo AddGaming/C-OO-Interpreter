@@ -1,3 +1,4 @@
-*.bat
+inject.bat
+run.bat
 *.obj
 *.exe

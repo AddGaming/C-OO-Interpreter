@@ -1,10 +1,41 @@
-#include "dynamic_array.h"
-#include "color_print.h"
-#include "result.h"
+/**
+ * array operations which take care of resizing
+ * typedef struct { 
+ *     size_t capacity;
+ *     unsigned int size; 
+ *     size_t count; 
+ *     type* ptr; 
+ *  } type##Wp; 
+ *
+ *  also defines corresponding result type
+ *
+ *  insert(wp, elem) -> res
+ *  in case of inserting into a max full wp,
+ *  does nothing and returns wp.
+ */
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <stdio.h>
+#include "result.h"
+#include "default_types.h"
+#include "color_print.h"
+
+#ifndef DEFINE_WP
+#define DEFINE_WP(type) \
+    typedef struct { \
+        size_t capacity; \
+        unsigned int size; \
+        size_t count; \
+        type* ptr; \
+    } type##Wp; \
+    DEFINE_RESULT(type##Wp); \
+    type##WpRes insert_##type(type##Wp arr, type elem); 
+
+DEFAULT_TYPES(DEFINE_WP);
+
+#define new_wp(name, type, capacity) \
+    type##Wp name = {capacity, sizeof(type), 0, calloc(capacity, sizeof(type))}; \
 
 #define DEFINE_INSERT(type) \
     type##WpRes insert_##type(type##Wp arr, type elem) { \
@@ -30,6 +61,8 @@
         return ans2; \
     }
 
-DEFAULT_TYPES(DEFINE_INSERT);
+
+#endif
+
 
 

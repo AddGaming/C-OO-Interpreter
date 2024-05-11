@@ -2,6 +2,8 @@
  * print in color
  */
 
+#include <stdio.h>
+
 #ifndef print_redln
 // ##############################
 // STD OUT
