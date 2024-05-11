@@ -21,6 +21,8 @@ typedef enum {
     RPAR, // right parentheses )
     LBRACE, // left brace [
     RBRACE, // right brace ]
+    END, // statement end \n
+    ERROR, // Encountered an error while lexing
 } LexType;
 
 typedef struct {
