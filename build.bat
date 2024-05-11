@@ -6,3 +6,4 @@ echo --------- GCC -------------
 gcc main.c dynamic_array.c -Wall -Wextra -o main.exe
 cd ..
 copy src\main.exe main.exe
+del src\main.exe
