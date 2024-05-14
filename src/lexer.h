@@ -25,13 +25,18 @@ typedef enum {
     ERROR, // Encountered an error while lexing
 } LexType;
 
+typedef struct { 
+    size_t count; 
+    char* ptr; 
+} LString; 
+
 typedef struct {
     LexType type;
     union {
         long intv;
         double floatv;
         unsigned char charv;
-        char* strv;
+        LString strv;
     } value;
 } LexToken;
 

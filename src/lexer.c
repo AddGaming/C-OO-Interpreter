@@ -29,16 +29,57 @@ unsigned char is_digit(char c) {
 
 /**
  * returns the lexed integer, 
- * while also advancing the fp as a side effect
+ * while also advancing the fp as a side effect.
+ * No error checking.
  */
 LexToken lex_int_const(FILE* fp) {
     fpos_t pos;
     fgetpos(fp, &pos);
 
     long number;
+    // guaranteed to succeed because only called when lexer encountered digit
     fscanf(fp, "%ld", &number);
     LexToken ans = {CONST_INT, {number}};
     return ans;
+}
+
+/**
+ * returns the lexed integer, 
+ * while also advancing the fp as a side effect
+ */
+LexToken lex_str_const(FILE* fp) {
+    fpos_t pos;
+    charWpRes res;
+    fgetpos(fp, &pos);
+    fseek(fp, 1, SEEK_CUR); // skipping " 
+
+    new_wp(str, char, 4);
+    int c = fgetc(fp);
+    int quote = (int) '"';
+    while(c != EOF && c != quote) {
+        res = insert_char(str, c);
+        if (res.type == SUCCESS) str = res.result;
+        else {
+            LexToken ans = {ERROR, {0}};
+            return ans;
+        }
+        c = fgetc(fp);
+    }
+    if (c == EOF) {
+        err_redln("Expected \" while lexing String Constant but found EOF");
+        LexToken ans = {ERROR, {0}};
+        return ans;
+    } else {
+        res = insert_char(str, '\0'); // just making sure always terminated
+        if (res.type == SUCCESS) str = res.result;
+        else {
+            LexToken ans = {ERROR, {0}};
+            return ans;
+        }
+        LString lstring = {str.count, str.ptr};
+        LexToken ans = {CONST_STR, {.strv=lstring}};
+        return ans;
+    }
 }
 
 /**
@@ -53,7 +94,7 @@ LexToken lex_chr_const(FILE* fp) {
     fgets(buff, sizeof(buff), fp);
     
     if (buff[0] != '\'' || buff[2] != '\'') {
-        err_redln("Expected character definition of form:\n\t'<char>'\ngot:\n\t%s", buff)
+        err_redln("Expected character definition of form:\n\t'<char>'\ngot:\n\t%s", buff);
         LexToken ans = {ERROR, {0}};
         return ans;
     } else {
@@ -134,12 +175,15 @@ LexTokenWp lex_file(FILE* fp) {
             LexToken tk = lex_chr_const(fp); 
             ans = insert_LexToken(ans, tk).result;
             if (tk.type == ERROR) return ans;
-            fseek(fp, 1, SEEK_CUR); 
+        }
+        else if (token_buff[0] == '\"') {
+            LexToken tk = lex_str_const(fp); 
+            ans = insert_LexToken(ans, tk).result;
+            if (tk.type == ERROR) return ans;
         }
         else if (is_digit(token_buff[0])) {
             LexToken tk = lex_int_const(fp);
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 1, SEEK_CUR); 
         }
         else {
             print_yellowln("unknown token: \"%s\"", token_buff);
@@ -183,7 +227,7 @@ void print_lex_wp(LexTokenWp wp) {
                 break;
             }
             case CONST_STR: {
-                print_yellow("COSNT_STR");
+                print_yellow("COSNT_STR(%s)", wp.ptr[i].value.strv.ptr);
                 break;
             }
             case LBRACK: {
