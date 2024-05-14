@@ -1,5 +1,5 @@
-#include "color_print.h"
-#include "dynamic_array.h"
+#include "rstd/color_print.h"
+#include "rstd/dynamic_array.h"
 #include "lexer.h"
 
 int main(int argc, char* argv[]) {

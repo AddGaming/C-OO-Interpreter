@@ -3,8 +3,8 @@
  */
 
 #include <stdio.h>
-#include "color_print.h"
-#include "dynamic_array.h"
+#include "rstd/color_print.h"
+#include "rstd/dynamic_array.h"
 
 typedef enum {
     ADD, // addition +
