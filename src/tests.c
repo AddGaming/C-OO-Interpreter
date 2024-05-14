@@ -3,6 +3,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+unsigned int test_lexer(void) {
+    unsigned int fails = 0;
+    fails += test_char('X', 'Y', "TODO: test lexer");
+    return fails;
+}
+
 unsigned int test_dyn_arr(void) {
     unsigned int fails = 0;
     
@@ -38,6 +44,7 @@ unsigned int test_dyn_arr(void) {
 int main(void){
     unsigned int fails = 0;
     fails += test_dyn_arr();
+    fails += test_lexer();
     fails += test_char('A', 'A', "SANITY SUCCESS");
     return fails;
 }
