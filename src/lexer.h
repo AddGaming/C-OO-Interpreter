@@ -11,10 +11,18 @@ typedef enum {
     SUB, // subraction -
     MUL, // multiplication *
     DIV, // division /
+    ASS, // assign =
+    EQ,  // equality ==
+    NEQ, // equality !=
+    GT,  // greater than >
+    LT,  // less than <
+    GE,  // greater equal >=
+    LE,  // less equal <=
     CONST_INT, // constant integer
     CONST_FLT, // constant float
     CONST_CHR, // constant character
     CONST_STR, // constant string
+    VAR, // variable 
     LBRACK, // left bracket {
     RBRACK, // right bracket }
     LPAR, // left parentheses (
