@@ -25,6 +25,8 @@ typedef enum {
     CONST_STR, // constant string
     VAR, // variable
     FN, // function fn
+    CL, // class lc
+    CLASS, // class name
     LBRACK, // left bracket {
     RBRACK, // right bracket }
     LPAR, // left parentheses (

@@ -73,7 +73,7 @@ LexToken lex_var(FILE* fp) {
     }
     fsetpos(fp, &pos);
     if (c == EOF) {
-        err_redln("Expected \" while lexing String Constant but found EOF");
+        err_redln("Expected \" while lexing Variable but found EOF");
         LexToken ans = {ERROR, {0}};
         return ans;
     } else {
@@ -85,6 +85,46 @@ LexToken lex_var(FILE* fp) {
         }
         LString lstring = {str.count, str.ptr};
         LexToken ans = {VAR, {.strv=lstring}};
+        return ans;
+    }
+}
+
+/**
+ * returns the lexed variable name, 
+ * while also advancing the fp as a side effect.
+ */
+LexToken lex_class(FILE* fp) {
+    fpos_t pos;
+    charWpRes res;
+    fgetpos(fp, &pos);
+
+    new_wp(str, char, 4);
+    int c = fgetc(fp);
+    // runs at least once since its called when is_upper is encountered
+    while(c != EOF && (is_upper(c) || is_lower(c))) {
+        res = insert_char(str, c);
+        if (res.type == SUCCESS) str = res.result;
+        else {
+            LexToken ans = {ERROR, {0}};
+            return ans;
+        }
+        fgetpos(fp, &pos);
+        c = fgetc(fp);
+    }
+    fsetpos(fp, &pos);
+    if (c == EOF) {
+        err_redln("Expected \" while lexing Class Name but found EOF");
+        LexToken ans = {ERROR, {0}};
+        return ans;
+    } else {
+        res = insert_char(str, '\0'); // just making sure always terminated
+        if (res.type == SUCCESS) str = res.result;
+        else {
+            LexToken ans = {ERROR, {0}};
+            return ans;
+        }
+        LString lstring = {str.count, str.ptr};
+        LexToken ans = {CLASS, {.strv=lstring}};
         return ans;
     }
 }
@@ -217,6 +257,11 @@ LexTokenWp lex_file(FILE* fp) {
             ans = insert_LexToken(ans, tk).result;
             fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
         }
+        else if (token_buff[0] == 'c' && token_buff[1] == 'l') {
+            LexToken tk = {CL , {0}}; 
+            ans = insert_LexToken(ans, tk).result;
+            fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
+        }
         else if (token_buff[0] == '=') {
             LexToken tk = {ASS, {0}}; 
             ans = insert_LexToken(ans, tk).result;
@@ -305,6 +350,10 @@ LexTokenWp lex_file(FILE* fp) {
             LexToken tk = lex_var(fp);
             ans = insert_LexToken(ans, tk).result;
         }
+        else if (is_upper(token_buff[0])) {
+            LexToken tk = lex_class(fp);
+            ans = insert_LexToken(ans, tk).result;
+        }
         else {
             print_yellowln("unknown token: \"%s\"", token_buff);
             fseek(fp, 1, SEEK_CUR); 
@@ -386,8 +435,16 @@ void print_lex_wp(LexTokenWp wp) {
                 print_yellow("VAR(%s)", wp.ptr[i].value.strv.ptr);
                 break;
             }
+            case CLASS: {
+                print_yellow("CLASS(%s)", wp.ptr[i].value.strv.ptr);
+                break;
+            }
             case FN: {
                 print_yellow("FN");
+                break;
+            }
+            case CL: {
+                print_yellow("CL");
                 break;
             }
             case LBRACK: {

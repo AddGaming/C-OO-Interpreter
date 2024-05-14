@@ -14,6 +14,11 @@ true == false
 1 <= 1
 "test" > "tes"
 fn my_fun(x) = x
-fn my_fun(x) {
-    return x ** 2
+fn power(x) {
+    x ** 2
 }
+fn void(x) {
+    print(x)
+}
+cl MyClass {}
+
