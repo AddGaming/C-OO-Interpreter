@@ -13,3 +13,7 @@ y = 'x'
 true == false
 1 <= 1
 "test" > "tes"
+fn my_fun(x) = x
+fn my_fun(x) {
+    return x ** 2
+}

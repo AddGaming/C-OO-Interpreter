@@ -28,7 +28,7 @@ unsigned char is_digit(char c) {
 }
 
 unsigned char is_lower(char c) {
-    return (c <= 'z' && c >= 'a');
+    return ((c <= 'z' && c >= 'a') || c == '_');
 }
 
 unsigned char is_upper(char c) {
@@ -193,37 +193,47 @@ LexTokenWp lex_file(FILE* fp) {
             fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
         }
         else if (token_buff[0] == '!' && token_buff[1] == '=') {
-            LexToken tk = {NEQ, {0}}; // define repetitively for sugar
+            LexToken tk = {NEQ, {0}};  
             ans = insert_LexToken(ans, tk).result;
             fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
         }
         else if (token_buff[0] == '>' && token_buff[1] == '=') {
-            LexToken tk = {GE , {0}}; // define repetitively for sugar
+            LexToken tk = {GE , {0}};  
             ans = insert_LexToken(ans, tk).result;
             fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
         }
         else if (token_buff[0] == '<' && token_buff[1] == '=') {
-            LexToken tk = {LE , {0}}; // define repetitively for sugar
+            LexToken tk = {LE , {0}};  
+            ans = insert_LexToken(ans, tk).result;
+            fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
+        }
+        else if (token_buff[0] == '*' && token_buff[1] == '*') {
+            LexToken tk = {POW , {0}}; 
+            ans = insert_LexToken(ans, tk).result;
+            fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
+        }
+        else if (token_buff[0] == 'f' && token_buff[1] == 'n') {
+            LexToken tk = {FN , {0}}; 
             ans = insert_LexToken(ans, tk).result;
             fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
         }
         else if (token_buff[0] == '=') {
-            LexToken tk = {ASS, {0}}; // define repetitively for sugar
+            LexToken tk = {ASS, {0}}; 
             ans = insert_LexToken(ans, tk).result;
             fseek(fp, 1, SEEK_CUR); // skipping tokened chars 
         }
         else if (token_buff[0] == '>') {
-            LexToken tk = {GT, {0}}; // define repetitively for sugar
+            LexToken tk = {GT, {0}}; 
             ans = insert_LexToken(ans, tk).result;
             fseek(fp, 1, SEEK_CUR); // skipping tokened chars 
         }
         else if (token_buff[0] == '<') {
-            LexToken tk = {LT, {0}}; // define repetitively for sugar
+            LexToken tk = {LT, {0}}; 
             ans = insert_LexToken(ans, tk).result;
             fseek(fp, 1, SEEK_CUR); // skipping tokened chars 
         }
         else if (token_buff[0] == '+') {
-            LexToken tk = {ADD, {0}}; // define repetitively for sugar
+            LexToken tk = {ADD, {0}};  
             ans = insert_LexToken(ans, tk).result;
             fseek(fp, 1, SEEK_CUR); // skipping tokened chars 
         }
@@ -324,6 +334,10 @@ void print_lex_wp(LexTokenWp wp) {
                 print_yellow("DIV");
                 break;
             }
+            case POW: {
+                print_yellow("POW");
+                break;
+            }
             case ASS: {
                 print_yellow("ASS");
                 break;
@@ -370,6 +384,10 @@ void print_lex_wp(LexTokenWp wp) {
             }
             case VAR: {
                 print_yellow("VAR(%s)", wp.ptr[i].value.strv.ptr);
+                break;
+            }
+            case FN: {
+                print_yellow("FN");
                 break;
             }
             case LBRACK: {

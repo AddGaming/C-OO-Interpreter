@@ -11,6 +11,7 @@ typedef enum {
     SUB, // subraction -
     MUL, // multiplication *
     DIV, // division /
+    POW, // power **
     ASS, // assign =
     EQ,  // equality ==
     NEQ, // equality !=
@@ -22,7 +23,8 @@ typedef enum {
     CONST_FLT, // constant float
     CONST_CHR, // constant character
     CONST_STR, // constant string
-    VAR, // variable 
+    VAR, // variable
+    FN, // function fn
     LBRACK, // left bracket {
     RBRACK, // right bracket }
     LPAR, // left parentheses (
