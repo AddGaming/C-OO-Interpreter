@@ -214,6 +214,11 @@ LexToken lex_chr_const(FILE* fp) {
     }
 }
 
+/**
+ * tries to lex the file 
+ * returns wp of lexed tokens
+ * if an error is encountered, the last element will be the token ERROR
+ */
 LexTokenWp lex_file(FILE* fp) {
     new_wp(ans, LexToken, 8);  // initial cap doesn't matter
     char token_buff[3] = {'\0'}; // [c1, c2, '\0']
@@ -375,11 +380,15 @@ LexTokenWp lex_file(FILE* fp) {
             ans = insert_LexToken(ans, tk).result;
         }
         else {
-            print_yellowln("unknown token: \"%s\"", token_buff);
-            fseek(fp, 1, SEEK_CUR); 
+            char* err_msg = calloc(32, sizeof(char));
+            sprintf(err_msg, "unknown token: \"%s\"", token_buff);
+            err_yellowln("%s", err_msg);
+            LString lstring = {30, err_msg};
+            LexToken tk = {ERROR, {.strv = lstring}};
+            ans = insert_LexToken(ans, tk).result;
+            return ans;
         }
     }
-
     // unreachable
     return ans;
 }

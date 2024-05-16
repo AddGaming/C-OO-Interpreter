@@ -60,3 +60,4 @@ DEFINE_WP(LexToken);
 
 LexTokenWp lex_file(FILE* fp);
 void print_lex_wp(LexTokenWp wp); // debug function
+void test_LexType(const LexType real, const LexType expected, const char* message); // debug function

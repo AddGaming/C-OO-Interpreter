@@ -1,11 +1,13 @@
 #include "rstd/testing.h"
 #include "rstd/dynamic_array.h"
+#include "lexer.h"
 #include <stdint.h>
 #include <stdlib.h>
 
 unsigned int test_lexer(void) {
     unsigned int fails = 0;
-    fails += test_char('X', 'Y', "TODO: test lexer");
+    FILE* x_open_quotes = fopen("../examples/x_open_quotes.txt", "r");
+    fails += test_LexType(ERROR, IS, "TODO: test lexer");
     return fails;
 }
 
