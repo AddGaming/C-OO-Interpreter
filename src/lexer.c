@@ -235,52 +235,72 @@ LexTokenWp lex_file(FILE* fp) {
         else if (token_buff[0] == '!' && token_buff[1] == '=') {
             LexToken tk = {NEQ, {0}};  
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
+            fseek(fp, 2, SEEK_CUR);   
+        }
+        else if (token_buff[0] == 'i' && token_buff[1] == 's') {
+            LexToken tk = {IS, {0}};  
+            ans = insert_LexToken(ans, tk).result;
+            fseek(fp, 2, SEEK_CUR);   
         }
         else if (token_buff[0] == '>' && token_buff[1] == '=') {
             LexToken tk = {GE , {0}};  
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
+            fseek(fp, 2, SEEK_CUR);   
         }
         else if (token_buff[0] == '<' && token_buff[1] == '=') {
             LexToken tk = {LE , {0}};  
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
+            fseek(fp, 2, SEEK_CUR);   
         }
         else if (token_buff[0] == '*' && token_buff[1] == '*') {
             LexToken tk = {POW , {0}}; 
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
+            fseek(fp, 2, SEEK_CUR);   
         }
         else if (token_buff[0] == 'f' && token_buff[1] == 'n') {
             LexToken tk = {FN , {0}}; 
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
+            fseek(fp, 2, SEEK_CUR);   
         }
         else if (token_buff[0] == 'c' && token_buff[1] == 'l') {
             LexToken tk = {CL , {0}}; 
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 2, SEEK_CUR); // skipping tokened chars 
+            fseek(fp, 2, SEEK_CUR);   
+        }
+        else if (token_buff[0] == ',') {
+            LexToken tk = {COMMA, {0}}; 
+            ans = insert_LexToken(ans, tk).result;
+            fseek(fp, 1, SEEK_CUR);   
+        }
+        else if (token_buff[0] == ':') {
+            LexToken tk = {COLON, {0}}; 
+            ans = insert_LexToken(ans, tk).result;
+            fseek(fp, 1, SEEK_CUR);   
+        }
+        else if (token_buff[0] == '?') {
+            LexToken tk = {IF, {0}}; 
+            ans = insert_LexToken(ans, tk).result;
+            fseek(fp, 1, SEEK_CUR);   
         }
         else if (token_buff[0] == '=') {
             LexToken tk = {ASS, {0}}; 
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 1, SEEK_CUR); // skipping tokened chars 
+            fseek(fp, 1, SEEK_CUR);   
         }
         else if (token_buff[0] == '>') {
             LexToken tk = {GT, {0}}; 
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 1, SEEK_CUR); // skipping tokened chars 
+            fseek(fp, 1, SEEK_CUR);   
         }
         else if (token_buff[0] == '<') {
             LexToken tk = {LT, {0}}; 
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 1, SEEK_CUR); // skipping tokened chars 
+            fseek(fp, 1, SEEK_CUR);   
         }
         else if (token_buff[0] == '+') {
             LexToken tk = {ADD, {0}};  
             ans = insert_LexToken(ans, tk).result;
-            fseek(fp, 1, SEEK_CUR); // skipping tokened chars 
+            fseek(fp, 1, SEEK_CUR);   
         }
         else if (token_buff[0] == '-') {
             LexToken tk = {SUB, {0}}; 
@@ -399,6 +419,10 @@ void print_lex_wp(LexTokenWp wp) {
                 print_yellow("NEQ");
                 break;
             }
+            case IS: {
+                print_yellow("IS");
+                break;
+            }
             case GT: {
                 print_yellow("GT");
                 break;
@@ -445,6 +469,18 @@ void print_lex_wp(LexTokenWp wp) {
             }
             case CL: {
                 print_yellow("CL");
+                break;
+            }
+            case IF: {
+                print_yellow("IF");
+                break;
+            }
+            case COMMA: {
+                print_yellow("COMMA");
+                break;
+            }
+            case COLON: {
+                print_yellow("COLON");
                 break;
             }
             case LBRACK: {

@@ -14,6 +14,7 @@ typedef enum {
     POW, // power **
     ASS, // assign =
     EQ,  // equality ==
+    IS,  // class equality is
     NEQ, // equality !=
     GT,  // greater than >
     LT,  // less than <
@@ -26,6 +27,9 @@ typedef enum {
     VAR, // variable
     FN, // function fn
     CL, // class lc
+    COLON, // colon :
+    COMMA, // comma ,
+    IF,    // if ?
     CLASS, // class name
     LBRACK, // left bracket {
     RBRACK, // right bracket }

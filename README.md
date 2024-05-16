@@ -6,3 +6,8 @@ Little interpreter for a little OO language written as a C practice execise.
 
 ## [Testing](test.bat)
 
+## Language
+
+### Top level classes
+
+`Str`, `Int`, `None`, `Flt`, `Chr`
