@@ -7,7 +7,10 @@
 unsigned int test_lexer(void) {
     unsigned int fails = 0;
     FILE* x_open_quotes = fopen("../examples/x_open_quotes.txt", "r");
-    fails += test_LexType(ERROR, IS, "TODO: test lexer");
+    LexToken l1 = {ERROR, {0}};
+    LexToken l2 = {IS, {0}};
+
+    fails += test_LexType(l1, l2, "TODO: test lexer");
     return fails;
 }
 
@@ -48,5 +51,6 @@ int main(void){
     fails += test_dyn_arr();
     fails += test_lexer();
     fails += test_char('A', 'A', "SANITY SUCCESS");
+    if (fails) {print_redln("Failed: %d", fails);}
     return fails;
 }

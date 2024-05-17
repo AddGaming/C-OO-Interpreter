@@ -393,139 +393,130 @@ LexTokenWp lex_file(FILE* fp) {
     return ans;
 }
 
+// ####################
+// DEBUG
+// ####################
+
+char* stringify(LexToken tk){
+    // since debugging only, fixed size should be fine
+    char* str = calloc(100, sizeof(char));
+    switch (tk.type) {
+        case ADD: {
+            sprintf_s(str, 100, "ADD"); break;
+        }
+        case SUB: {
+            sprintf_s(str, 100, "SUB"); break;
+        }
+        case MUL: {
+            sprintf_s(str, 100, "MUL"); break;
+        }
+        case DIV: {
+            sprintf_s(str, 100, "DIV"); break;
+        }
+        case POW: {
+            sprintf_s(str, 100, "POW"); break;
+        }
+        case ASS: {
+            sprintf_s(str, 100, "ASS"); break;
+        }
+        case EQ: {
+            sprintf_s(str, 100, "EQ"); break;
+        }
+        case NEQ: {
+            sprintf_s(str, 100, "NEQ"); break;
+        }
+        case IS: {
+            sprintf_s(str, 100, "IS"); break;
+        }
+        case GT: {
+            sprintf_s(str, 100, "GT"); break;
+        }
+        case LT: {
+            sprintf_s(str, 100, "LT"); break;
+        }
+        case GE: {
+            sprintf_s(str, 100, "GE"); break;
+        }
+        case LE: {
+            sprintf_s(str, 100, "LE"); break;
+        }
+        case CONST_INT: {
+            sprintf_s(str, 100, "CONT_INT(%ld)", tk.value.intv); break;
+        }
+        case CONST_FLT: {
+            sprintf_s(str, 100, "CONST_FLT(%lf)", tk.value.floatv); break;
+        }
+        case CONST_CHR: {
+            sprintf_s(str, 100, "COSNT_CHR(%c)", tk.value.charv); break;
+        }
+        case CONST_STR: {
+            sprintf_s(str, 100, "COSNT_STR(%s)", tk.value.strv.ptr); break;
+        }
+        case VAR: {
+            sprintf_s(str, 100, "VAR(%s)", tk.value.strv.ptr); break;
+        }
+        case CLASS: {
+            sprintf_s(str, 100, "CLASS(%s)", tk.value.strv.ptr); break;
+        }
+        case FN: {
+            sprintf_s(str, 100, "FN"); break;
+        }
+        case CL: {
+            sprintf_s(str, 100, "CL"); break;
+        }
+        case IF: {
+            sprintf_s(str, 100, "IF"); break;
+        }
+        case COMMA: {
+            sprintf_s(str, 100, "COMMA"); break;
+        }
+        case COLON: {
+            sprintf_s(str, 100, "COLON"); break;
+        }
+        case LBRACK: {
+            sprintf_s(str, 100, "LBRACK"); break;
+        }
+        case RBRACK: {
+            sprintf_s(str, 100, "RBRACK"); break;
+        }
+        case LPAR: {
+            sprintf_s(str, 100, "LPAR"); break;
+        }
+        case RPAR: {
+            sprintf_s(str, 100, "RPAR"); break;
+        }
+        case LBRACE: {
+            sprintf_s(str, 100, "LBRACE"); break;
+        }
+        case RBRACE: {
+            sprintf_s(str, 100, "RBRACE");
+            break;
+        }
+        case END: {
+            sprintf_s(str, 100, "\n");
+        }
+        case ERROR: {
+            sprintf_s(str, 100, "ERROR");
+            break;
+        }
+    }
+    return str;
+}
+
 void print_lex_wp(LexTokenWp wp) {
     for (size_t i = 0; i < wp.count; i++) {
-        switch (wp.ptr[i].type) {
-            case ADD: {
-                print_yellow("ADD");
-                break;
-            }
-            case SUB: {
-                print_yellow("SUB");
-                break;
-            }
-            case MUL: {
-                print_yellow("MUL");
-                break;
-            }
-            case DIV: {
-                print_yellow("DIV");
-                break;
-            }
-            case POW: {
-                print_yellow("POW");
-                break;
-            }
-            case ASS: {
-                print_yellow("ASS");
-                break;
-            }
-            case EQ: {
-                print_yellow("EQ");
-                break;
-            }
-            case NEQ: {
-                print_yellow("NEQ");
-                break;
-            }
-            case IS: {
-                print_yellow("IS");
-                break;
-            }
-            case GT: {
-                print_yellow("GT");
-                break;
-            }
-            case LT: {
-                print_yellow("LT");
-                break;
-            }
-            case GE: {
-                print_yellow("GE");
-                break;
-            }
-            case LE: {
-                print_yellow("LE");
-                break;
-            }
-            case CONST_INT: {
-                print_yellow("CONT_INT(%ld)", wp.ptr[i].value.intv);
-                break;
-            }
-            case CONST_FLT: {
-                print_yellow("CONST_FLT(%lf)", wp.ptr[i].value.floatv);
-                break;
-            }
-            case CONST_CHR: {
-                print_yellow("COSNT_CHR(%c)", wp.ptr[i].value.charv);
-                break;
-            }
-            case CONST_STR: {
-                print_yellow("COSNT_STR(%s)", wp.ptr[i].value.strv.ptr);
-                break;
-            }
-            case VAR: {
-                print_yellow("VAR(%s)", wp.ptr[i].value.strv.ptr);
-                break;
-            }
-            case CLASS: {
-                print_yellow("CLASS(%s)", wp.ptr[i].value.strv.ptr);
-                break;
-            }
-            case FN: {
-                print_yellow("FN");
-                break;
-            }
-            case CL: {
-                print_yellow("CL");
-                break;
-            }
-            case IF: {
-                print_yellow("IF");
-                break;
-            }
-            case COMMA: {
-                print_yellow("COMMA");
-                break;
-            }
-            case COLON: {
-                print_yellow("COLON");
-                break;
-            }
-            case LBRACK: {
-                print_yellow("LBRACK");
-                break;
-            }
-            case RBRACK: {
-                print_yellow("RBRACK");
-                break;
-            }
-            case LPAR: {
-                print_yellow("LPAR");
-                break;
-            }
-            case RPAR: {
-                print_yellow("RPAR");
-                break;
-            }
-            case LBRACE: {
-                print_yellow("LBRACE");
-                break;
-            }
-            case RBRACE: {
-                print_yellow("RBRACE");
-                break;
-            }
-            case END: {
-                print_yellow("\n");
-                continue;
-            }
-            case ERROR: {
-                print_yellow("ERROR");
-                break;
-            }
-        }
+        print_yellow("%s", stringify(wp.ptr[i]));
         print_yellow(", ");
     }
     print_yellowln(" ");
+}
+
+unsigned int test_LexType(const LexToken real, const LexToken expected, const char* message) {
+    if (real.type == expected.type) {
+        printf("\x1B[32m%s\x1B[0m\n", message);
+        return 0;
+    } else {
+        printf("\x1B[31mexpected: %s\nreceived: %s\n%s\x1B[0m\n", stringify(expected), stringify(real), message);
+        return 1;
+    }  
 }

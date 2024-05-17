@@ -1,9 +1,9 @@
 @echo off
 cd src
-echo --------- GCC ------------- 
-gcc tests.c testing.c dynamic_array.c -Wall -Wextra -o test.exe
+echo --------- MSVC ------------- 
+cl /Wall tests.c rstd\\testing.c rstd\\dynamic_array.c lexer.c
 echo --------------------- 
-test.exe 2> nul :: redirecting stderr to null, since errors are exprected
-del test.exe
+tests.exe 2> nul :: redirecting stderr to null, since errors are exprected
+del tests.exe
 cd ..
 
