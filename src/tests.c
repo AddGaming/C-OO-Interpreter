@@ -16,10 +16,17 @@ unsigned int test_lexer(void) {
 
     fp = fopen("../examples/x_open_single_quotes.txt", "r");
     wp = lex_file(fp);
+    fails += test_LexType(wp.ptr[wp.count-1], err, "Open single quotes result in err");
+    fclose(fp);
+    free(wp.ptr);
+    
+    fp = fopen("../examples/x_spaced_single_quotes.txt", "r");
+    wp = lex_file(fp);
     fails += test_LexType(wp.ptr[wp.count-1], err, "Spaced single quotes result in err");
     fclose(fp);
     free(wp.ptr);
     
+
     fp = fopen("../examples/x_valid_code.txt", "r");
     wp = lex_file(fp);
     fails += test_LexType(wp.ptr[wp.count-1], end, "Valid Lexing combinations pass");

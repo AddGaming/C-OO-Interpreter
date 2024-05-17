@@ -42,28 +42,22 @@ LexToken lex_var(FILE* fp) {
         c = fgetc(fp);
     }
     fsetpos(fp, &pos);
-    if (c == EOF) {
-        err_redln("Expected \" while lexing Variable but found EOF");
+    res = insert_char(str, '\0'); // just making sure always terminated
+    if (res.type == SUCCESS) str = res.result;
+    else {
         LexToken ans = {ERROR, {0}};
         return ans;
-    } else {
-        res = insert_char(str, '\0'); // just making sure always terminated
-        if (res.type == SUCCESS) str = res.result;
-        else {
-            LexToken ans = {ERROR, {0}};
-            return ans;
-        }
-        LString lstring = {str.count, str.ptr};
-        LexToken ans = {VAR, {.strv=lstring}};
-        return ans;
     }
+    LString lstring = {str.count, str.ptr};
+    LexToken ans = {VAR, {.strv=lstring}};
+    return ans;
 }
 
 /**
  * returns the lexed variable name, 
  * while also advancing the fp as a side effect.
  */
-LexToken lex_class(FILE* fp) {
+LexToken lex_class(FILE* fp, unsigned int line) {
     fpos_t pos;
     charWpRes res;
     fgetpos(fp, &pos);
@@ -83,7 +77,7 @@ LexToken lex_class(FILE* fp) {
     }
     fsetpos(fp, &pos);
     if (c == EOF) {
-        err_redln("Expected \" while lexing Class Name but found EOF");
+        err_redln("Expected class definition but found EOF\nDefinition start at line %d", line);
         LexToken ans = {ERROR, {0}};
         return ans;
     } else {
@@ -128,7 +122,7 @@ LexToken lex_int_const(FILE* fp) {
  * returns the lexed integer, 
  * while also advancing the fp as a side effect
  */
-LexToken lex_str_const(FILE* fp) {
+LexToken lex_str_const(FILE* fp, unsigned int line) {
     fpos_t pos;
     charWpRes res;
     fgetpos(fp, &pos);
@@ -147,7 +141,7 @@ LexToken lex_str_const(FILE* fp) {
         c = fgetc(fp);
     }
     if (c == EOF) {
-        err_redln("Expected \" while lexing String Constant but found EOF");
+        err_redln("Expected \" while lexing String Constant but found EOF\nString start on line %d", line);
         LexToken ans = {ERROR, {0}};
         return ans;
     } else {
@@ -167,7 +161,7 @@ LexToken lex_str_const(FILE* fp) {
  * returns the lexed character, 
  * while also advancing the fp as a side effect
  */
-LexToken lex_chr_const(FILE* fp) {
+LexToken lex_chr_const(FILE* fp, unsigned int line) {
     fpos_t pos;
     fgetpos(fp, &pos);
 
@@ -175,7 +169,7 @@ LexToken lex_chr_const(FILE* fp) {
     fgets(buff, sizeof(buff), fp);
     
     if (buff[0] != '\'' || buff[2] != '\'') {
-        err_redln("Expected character definition of form:\n\t'<char>'\ngot:\n\t%s", buff);
+        err_redln("Expected character definition at line %d of form:\n\t'<char>'\ngot:\n\t%s", line, buff);
         LexToken ans = {ERROR, {0}};
         return ans;
     } else {
@@ -193,6 +187,7 @@ LexTokenWp lex_file(FILE* fp) {
     new_wp(ans, LexToken, 8);  // initial cap doesn't matter
     char token_buff[3] = {'\0'}; // [c1, c2, '\0']
     fpos_t pos;
+    unsigned int line = 1;
     
     while (1) {
         skip_whitespace(fp);
@@ -323,17 +318,18 @@ LexTokenWp lex_file(FILE* fp) {
             fseek(fp, 1, SEEK_CUR); 
         }
         else if (token_buff[0] == '\n') {
+            line++;
             LexToken tk = {END, {0}}; 
             ans = insert_LexToken(ans, tk).result;
             fseek(fp, 1, SEEK_CUR); 
         }
         else if (token_buff[0] == '\'') {
-            LexToken tk = lex_chr_const(fp); 
+            LexToken tk = lex_chr_const(fp, line); 
             ans = insert_LexToken(ans, tk).result;
             if (tk.type == ERROR) return ans;
         }
         else if (token_buff[0] == '\"') {
-            LexToken tk = lex_str_const(fp); 
+            LexToken tk = lex_str_const(fp, line); 
             ans = insert_LexToken(ans, tk).result;
             if (tk.type == ERROR) return ans;
         }
@@ -346,12 +342,12 @@ LexTokenWp lex_file(FILE* fp) {
             ans = insert_LexToken(ans, tk).result;
         }
         else if (is_upper(token_buff[0])) {
-            LexToken tk = lex_class(fp);
+            LexToken tk = lex_class(fp, line);
             ans = insert_LexToken(ans, tk).result;
         }
         else {
             char* err_msg = calloc(32, sizeof(char));
-            sprintf(err_msg, "unknown token: \"%s\"", token_buff);
+            sprintf(err_msg, "unknown token: \"%s\" at line %d", token_buff, line);
             err_yellowln("%s", err_msg);
             LString lstring = {30, err_msg};
             LexToken tk = {ERROR, {.strv = lstring}};
