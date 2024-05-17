@@ -43,7 +43,7 @@ unsigned char is_upper(char c) {
 LexToken lex_flt_const(FILE* fp) {
     double number;
     // guaranteed to succeed because only called when lexer encountered float
-    fscanf(fp, "%lf", &number);
+    fscanf_s(fp, "%lf", &number);
     
     LexToken ans = {CONST_FLT, {.floatv = number}};
     return ans;
@@ -140,7 +140,7 @@ LexToken lex_int_const(FILE* fp) {
 
     long number;
     // guaranteed to succeed because only called when lexer encountered digit
-    fscanf(fp, "%ld", &number);
+    fscanf_s(fp, "%ld", &number);
     fgetpos(fp, &pos_int_end);
     
     int dot = (int) '.';
@@ -163,7 +163,7 @@ LexToken lex_str_const(FILE* fp) {
     charWpRes res;
     fgetpos(fp, &pos);
     fseek(fp, 1, SEEK_CUR); // skipping " 
-
+    
     new_wp(str, char, 4);
     int c = fgetc(fp);
     int quote = (int) '"';
