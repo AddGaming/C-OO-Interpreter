@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 /**
  * moves fp to next non whitespace char
  */

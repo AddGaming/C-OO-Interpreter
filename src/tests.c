@@ -1,5 +1,4 @@
-#include "rstd/testing.h"
-#include "rstd/dynamic_array.h"
+#include "rstd/rstd.h"
 #include "lexer.h"
 #include <stdint.h>
 #include <stdlib.h>
