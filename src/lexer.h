@@ -58,5 +58,6 @@ typedef struct {
 DEFINE_WP(LexToken);
 
 LexTokenWp lex_file(FILE* fp);
+
 void print_lex_wp(LexTokenWp wp); // debug function
 unsigned int test_LexType(const LexToken real, const LexToken expected, const char* message); // debug function

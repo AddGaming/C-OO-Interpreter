@@ -5,11 +5,27 @@
 
 unsigned int test_lexer(void) {
     unsigned int fails = 0;
-    FILE* x_open_quotes = fopen("../examples/x_open_quotes.txt", "r");
-    LexToken l1 = {ERROR, {0}};
-    LexToken l2 = {IS, {0}};
+    LexToken err = {ERROR, {0}};
+    LexToken end = {END, {0}};
+    
+    FILE* fp = fopen("../examples/x_open_quotes.txt", "r");
+    LexTokenWp wp = lex_file(fp);
+    fails += test_LexType(wp.ptr[wp.count-1], err, "Unclosed quotes result in err");
+    fclose(fp);
+    free(wp.ptr);
 
-    fails += test_LexType(l1, l2, "TODO: test lexer");
+    fp = fopen("../examples/x_open_single_quotes.txt", "r");
+    wp = lex_file(fp);
+    fails += test_LexType(wp.ptr[wp.count-1], err, "Spaced single quotes result in err");
+    fclose(fp);
+    free(wp.ptr);
+    
+    fp = fopen("../examples/x_valid_code.txt", "r");
+    wp = lex_file(fp);
+    fails += test_LexType(wp.ptr[wp.count-1], end, "Valid Lexing combinations pass");
+    fclose(fp);
+    free(wp.ptr);
+
     return fails;
 }
 
