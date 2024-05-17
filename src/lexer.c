@@ -6,36 +6,6 @@
 DEFINE_INSERT(LexToken);
 
 /**
- * moves fp to next non whitespace char
- */
-void skip_whitespace(FILE* fp) {
-    fpos_t pos;
-    fgetpos(fp, &pos);
-
-    int c = fgetc(fp);
-    int space = (int) ' ';
-    int tab = (int) '\t';
-    int carrige = (int) '\r';
-    while (c != EOF && (c == carrige || c == space || c == tab)) {
-        fgetpos(fp, &pos);
-        c = fgetc(fp);
-    }
-    if (c != EOF) fsetpos(fp, &pos);
-}
-
-unsigned char is_digit(char c) {
-    return (c <= '9' && c >= '0');
-}
-
-unsigned char is_lower(char c) {
-    return ((c <= 'z' && c >= 'a') || c == '_');
-}
-
-unsigned char is_upper(char c) {
-    return (c <= 'Z' && c >= 'A');
-}
-
-/**
  * returns the lexed float, 
  * while also advancing the fp as a side effect.
  * No error checking.
@@ -43,7 +13,7 @@ unsigned char is_upper(char c) {
 LexToken lex_flt_const(FILE* fp) {
     double number;
     // guaranteed to succeed because only called when lexer encountered float
-    fscanf_s(fp, "%lf", &number);
+    fscanf(fp, "%lf", &number);
     
     LexToken ans = {CONST_FLT, {.floatv = number}};
     return ans;
@@ -140,7 +110,7 @@ LexToken lex_int_const(FILE* fp) {
 
     long number;
     // guaranteed to succeed because only called when lexer encountered digit
-    fscanf_s(fp, "%ld", &number);
+    fscanf(fp, "%ld", &number);
     fgetpos(fp, &pos_int_end);
     
     int dot = (int) '.';
@@ -397,106 +367,107 @@ LexTokenWp lex_file(FILE* fp) {
 // DEBUG
 // ####################
 
-char* stringify(LexToken tk){
+char* to_to_str(LexToken tk){
     // since debugging only, fixed size should be fine
     char* str = calloc(100, sizeof(char));
     switch (tk.type) {
         case ADD: {
-            sprintf_s(str, 100, "ADD"); break;
+            sprintf(str, "ADD"); break;
         }
         case SUB: {
-            sprintf_s(str, 100, "SUB"); break;
+            sprintf(str, "SUB"); break;
         }
         case MUL: {
-            sprintf_s(str, 100, "MUL"); break;
+            sprintf(str, "MUL"); break;
         }
         case DIV: {
-            sprintf_s(str, 100, "DIV"); break;
+            sprintf(str, "DIV"); break;
         }
         case POW: {
-            sprintf_s(str, 100, "POW"); break;
+            sprintf(str, "POW"); break;
         }
         case ASS: {
-            sprintf_s(str, 100, "ASS"); break;
+            sprintf(str, "ASS"); break;
         }
         case EQ: {
-            sprintf_s(str, 100, "EQ"); break;
+            sprintf(str, "EQ"); break;
         }
         case NEQ: {
-            sprintf_s(str, 100, "NEQ"); break;
+            sprintf(str, "NEQ"); break;
         }
         case IS: {
-            sprintf_s(str, 100, "IS"); break;
+            sprintf(str, "IS"); break;
         }
         case GT: {
-            sprintf_s(str, 100, "GT"); break;
+            sprintf(str, "GT"); break;
         }
         case LT: {
-            sprintf_s(str, 100, "LT"); break;
+            sprintf(str, "LT"); break;
         }
         case GE: {
-            sprintf_s(str, 100, "GE"); break;
+            sprintf(str, "GE"); break;
         }
         case LE: {
-            sprintf_s(str, 100, "LE"); break;
+            sprintf(str, "LE"); break;
         }
         case CONST_INT: {
-            sprintf_s(str, 100, "CONT_INT(%ld)", tk.value.intv); break;
+            sprintf(str, "CONT_INT(%ld)", tk.value.intv); break;
         }
         case CONST_FLT: {
-            sprintf_s(str, 100, "CONST_FLT(%lf)", tk.value.floatv); break;
+            sprintf(str, "CONST_FLT(%lf)", tk.value.floatv); break;
         }
         case CONST_CHR: {
-            sprintf_s(str, 100, "COSNT_CHR(%c)", tk.value.charv); break;
+            sprintf(str, "COSNT_CHR(%c)", tk.value.charv); break;
         }
         case CONST_STR: {
-            sprintf_s(str, 100, "COSNT_STR(%s)", tk.value.strv.ptr); break;
+            sprintf(str, "COSNT_STR(%s)", tk.value.strv.ptr); break;
         }
         case VAR: {
-            sprintf_s(str, 100, "VAR(%s)", tk.value.strv.ptr); break;
+            sprintf(str, "VAR(%s)", tk.value.strv.ptr); break;
         }
         case CLASS: {
-            sprintf_s(str, 100, "CLASS(%s)", tk.value.strv.ptr); break;
+            sprintf(str, "CLASS(%s)", tk.value.strv.ptr); break;
         }
         case FN: {
-            sprintf_s(str, 100, "FN"); break;
+            sprintf(str, "FN"); break;
         }
         case CL: {
-            sprintf_s(str, 100, "CL"); break;
+            sprintf(str, "CL"); break;
         }
         case IF: {
-            sprintf_s(str, 100, "IF"); break;
+            sprintf(str, "IF"); break;
         }
         case COMMA: {
-            sprintf_s(str, 100, "COMMA"); break;
+            sprintf(str, "COMMA"); break;
         }
         case COLON: {
-            sprintf_s(str, 100, "COLON"); break;
+            sprintf(str, "COLON"); break;
         }
         case LBRACK: {
-            sprintf_s(str, 100, "LBRACK"); break;
+            sprintf(str, "LBRACK"); break;
         }
         case RBRACK: {
-            sprintf_s(str, 100, "RBRACK"); break;
+            sprintf(str, "RBRACK"); break;
         }
         case LPAR: {
-            sprintf_s(str, 100, "LPAR"); break;
+            sprintf(str, "LPAR"); break;
         }
         case RPAR: {
-            sprintf_s(str, 100, "RPAR"); break;
+            sprintf(str, "RPAR"); break;
         }
         case LBRACE: {
-            sprintf_s(str, 100, "LBRACE"); break;
+            sprintf(str, "LBRACE"); break;
         }
         case RBRACE: {
-            sprintf_s(str, 100, "RBRACE");
+            sprintf(str, "RBRACE");
             break;
         }
         case END: {
-            sprintf_s(str, 100, "\n");
+            sprintf(str, "\n");
+            break;
         }
         case ERROR: {
-            sprintf_s(str, 100, "ERROR");
+            sprintf(str, "ERROR");
             break;
         }
     }
@@ -505,7 +476,7 @@ char* stringify(LexToken tk){
 
 void print_lex_wp(LexTokenWp wp) {
     for (size_t i = 0; i < wp.count; i++) {
-        print_yellow("%s", stringify(wp.ptr[i]));
+        print_yellow("%s", to_to_str(wp.ptr[i]));
         print_yellow(", ");
     }
     print_yellowln(" ");
@@ -516,7 +487,7 @@ unsigned int test_LexType(const LexToken real, const LexToken expected, const ch
         printf("\x1B[32m%s\x1B[0m\n", message);
         return 0;
     } else {
-        printf("\x1B[31mexpected: %s\nreceived: %s\n%s\x1B[0m\n", stringify(expected), stringify(real), message);
+        printf("\x1B[31mexpected: %s\nreceived: %s\n%s\x1B[0m\n", to_to_str(expected), to_to_str(real), message);
         return 1;
     }  
 }
