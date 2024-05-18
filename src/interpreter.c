@@ -1,13 +1,11 @@
 /**
  * interprets the tree
  */
+#include "concepts.h"
 
-typedef struct {
-    environment;  // in this case function variable bindings
-    expressions;
-} Closure;
+Closure evaluate(Closure closure) {
 
-Closure evaluate(Closure closure);
+}
 
 void interpret(ExpressionWp setup) {
     ObjWP   objects = []
@@ -20,11 +18,14 @@ void interpret(ExpressionWp setup) {
 
     while (objects.count > 0) {
         for obj in objects {
-            if (obj.sleeping > 0) { obj.sleeping-- ;continue;}
+            if (obj.sleeping > 0) { obj.sleeping--; continue;}
             while (obj.count > 0) {
                 Function receive = classes[obj.id].funcs[0]
                 Closure op = {env, newWP(receive)}
                 res = evaluate(op)
+                if (res.expression.count > 0 && res.expressions[0] != Strukt) {
+                    obj.state = res;
+                }
             }
         }
     }

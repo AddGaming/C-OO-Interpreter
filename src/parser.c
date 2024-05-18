@@ -68,12 +68,12 @@ struct _Class {
 
 struct _Object {
     ClassId id;
-    struct _Object* inbox; // until structs are supported
+    struct _Object* inbox; // until structs are supported ah fk I need structs in parsing for the inbox
     uchar capacity;
     uchar count;
     int* accepts;  // class id list
     uint sleeping;
-    ExpressionWp state;
+    Closure state;
 }
 
 
