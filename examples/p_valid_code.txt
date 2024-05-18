@@ -1,0 +1,29 @@
+cl AddOne {
+    fn __receive__(msg: Int, Chr) {
+        (msg is Int) ? emit(msg + 1) : die()
+    }
+}
+
+cl Printer {
+    fn __receive__(msg: Int, Chr) {
+        (msg is Int) ? print(msg) : die()
+    }
+}
+
+cl IntEmitter {
+    fn __init__() {
+        start(0)
+    }
+    fn __die__() {
+        emit('x')
+    }
+    fn start(n: Int) {
+        emit(n)
+        sleep(1)
+        (n == 10) ? die() : start(n+1)
+    }
+}
+
+AddOne()
+Printer()
+IntEmitter()
