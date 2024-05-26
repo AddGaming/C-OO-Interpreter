@@ -11,7 +11,8 @@ void skip_whitespace(FILE* fp) {
     int space = (int) ' ';
     int tab = (int) '\t';
     int carrige = (int) '\r';
-    while (c != EOF && (c == carrige || c == space || c == tab)) {
+    int nl = (int) '\n';
+    while (c != EOF && (c == carrige || c == space || c == tab || c == nl)) {
         fgetpos(fp, &pos);
         c = fgetc(fp);
     }
@@ -30,4 +31,15 @@ unsigned char is_upper(char c) {
     return (c <= 'Z' && c >= 'A');
 }
 
-
+/**
+ * returns the next char in the stream without advncing the fp
+ * int because of EOF
+ */
+int peak(FILE* fp) {
+    fpos_t pos;
+    int ans;
+    fgetpos(fp, &pos);
+    ans = fgetc(fp);
+    fsetpos(fp, &pos);
+    return ans;
+}
